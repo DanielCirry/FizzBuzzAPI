@@ -35,12 +35,18 @@ namespace FizzBuzzAPITests
 
             _mock = new Mock<FizzBuzzLogic>();
 
+            _mock.Setup(h => h.CheckIfItIsFizz(It.IsAny<int>()))
+                .Callback<bool>(r => r = true);
             _mock.Setup(h => h.ReturnFizz(It.IsAny<int>()))
                 .Callback<string>(r => _fizz = r);
-            
+
+            _mock.Setup(h => h.CheckIfItIsBuzz(It.IsAny<int>()))
+                .Callback<bool>(r => r = true);
             _mock.Setup(s => s.ReturnBuzz(It.IsAny<int>()))
                 .Callback<string>(r => _buzz = r);
 
+            _mock.Setup(h => h.CheckIftIsFizzBuzz(It.IsAny<int>()))
+                .Callback<bool>(r => r = true);
             _mock.Setup(s => s.ReturnFizzBuzz(It.IsAny<int>()))
                 .Callback<string>(r => _fizzBuzz = r);
 
@@ -52,6 +58,9 @@ namespace FizzBuzzAPITests
             // I have wrote ReturnNoValue that is so useless because the other methods will return null, but I kind of have an idea.
 
             // my eyes hurts so much and there is pizza, I'll be back.
+            // 20:26 ->
+            // I am back. I don't need async, but my eye is not any better.
+
         }
 
         [Test]

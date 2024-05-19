@@ -4,37 +4,37 @@ namespace FizzBuzzAPI.Services
 {
     public class FizzBuzzLogic : IFizzBuzzLogic
     {
-        public Task<bool> CheckIfIsBuzzz(int value)
+        public bool CheckIfItIsFizz(int value)
+        {
+            return value % 3 == 0;
+        }
+
+        public bool CheckIfItIsBuzz(int value)
+        {
+            return value % 5 == 0;
+        }
+
+        public bool CheckIftIsFizzBuzz(int value)
+        {
+            return value % 15 == 0;
+        }
+
+        public string ReturnBuzz(int value)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> CheckIfIsFizz(int value)
+        public string ReturnFizz(int value)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> CheckIfIsFizzBuzz(int value)
+        public string ReturnFizzBuzz(int value)
         {
             throw new NotImplementedException();
         }
 
-        public Task<string> ReturnBuzz(int value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> ReturnFizz(int value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> ReturnFizzBuzz(int value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> ReturnNoValue(int value)
+        public string ReturnNoValue(int value)
         {
             throw new NotImplementedException();
         }
