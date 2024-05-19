@@ -2,12 +2,13 @@
 {
     public interface IFizzBuzzLogic
     {
-        bool CheckIfItIsFizz(int value);
-        bool CheckIfItIsBuzz(int value);
-        bool CheckIftIsFizzBuzz(int value);
+        bool IsFizz(int value);
+        bool IsBuzz(int value);
+        bool IsFizzBuzz(int value);
         string ReturnFizz(int value);
         string ReturnBuzz(int value);
         string ReturnFizzBuzz(int value);
         string ReturnNoValue(int value);
+        string? HandleFizzBuzzLogic(object value);
     }
 }

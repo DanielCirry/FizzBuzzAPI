@@ -1,3 +1,5 @@
+using FizzBuzzAPI.Controllers;
+using FizzBuzzAPI.Interfaces;
 using FizzBuzzAPI.Services;
 using Moq;
 
@@ -5,10 +7,10 @@ namespace FizzBuzzAPITests
 {
     public class FizzBuzzTests
     {
-        private Mock<FizzBuzzLogic> _mock;
-        private string _fizz;
-        private string _buzz;
-        private string _fizzBuzz;
+        private Mock<IFizzBuzzLogic> _mock;
+        private string _fizz = "";
+        private string _buzz = "";
+        private string _fizzBuzz = "";
 
         [SetUp]
         public void Setup()
@@ -33,19 +35,19 @@ namespace FizzBuzzAPITests
             // 18:56 ->
             // got distracted by family
 
-            _mock = new Mock<FizzBuzzLogic>();
+            _mock = new Mock<IFizzBuzzLogic>();
 
-            _mock.Setup(h => h.CheckIfItIsFizz(It.IsAny<int>()))
+            _mock.Setup(h => h.IsFizz(It.IsAny<int>()))
                 .Callback<bool>(r => r = true);
             _mock.Setup(h => h.ReturnFizz(It.IsAny<int>()))
                 .Callback<string>(r => _fizz = r);
 
-            _mock.Setup(h => h.CheckIfItIsBuzz(It.IsAny<int>()))
+            _mock.Setup(h => h.IsBuzz(It.IsAny<int>()))
                 .Callback<bool>(r => r = true);
             _mock.Setup(s => s.ReturnBuzz(It.IsAny<int>()))
                 .Callback<string>(r => _buzz = r);
 
-            _mock.Setup(h => h.CheckIftIsFizzBuzz(It.IsAny<int>()))
+            _mock.Setup(h => h.IsFizzBuzz(It.IsAny<int>()))
                 .Callback<bool>(r => r = true);
             _mock.Setup(s => s.ReturnFizzBuzz(It.IsAny<int>()))
                 .Callback<string>(r => _fizzBuzz = r);
@@ -60,6 +62,15 @@ namespace FizzBuzzAPITests
             // my eyes hurts so much and there is pizza, I'll be back.
             // 20:26 ->
             // I am back. I don't need async, but my eye is not any better.
+            // <- 20:39
+
+            // 20:59 ->
+            // family distracted me again, but they left now and my eye is hurting so much.
+            // <- 21:01
+
+            // -> 21:19
+            // stopped for a bit because of eye
+            // <- 21:36
 
         }
 
@@ -67,6 +78,14 @@ namespace FizzBuzzAPITests
         public void GivesCorrectValue_ShouldReturn_Fizz()
         {
             int value = 3;
+            var service = new Mock<IFizzBuzzLogic>();
+            service.Setup(h => h.IsFizz(It.IsAny<int>()))
+                .Callback<bool>(r => r = true);
+            service.Setup(h => h.ReturnFizz(It.IsAny<int>()))
+                .Callback<string>(r => _fizz = r);
+
+            var controller = new FizzBuzzController(service.Object);
+            service.Object.ReturnFizz(value);
 
             string result = classs.CallTheApiMethodHere(value);
             Assert.Pass();
