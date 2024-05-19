@@ -1,4 +1,5 @@
 ﻿using FizzBuzzAPI.Interfaces;
+using FizzBuzzAPI.Models;
 using System.Reflection;
 using System.Xml.Linq;
 
@@ -18,14 +19,9 @@ namespace FizzBuzzAPI.Services
 
         public string ReturnFizzBuzz() => "FizzBuzz";
 
-        public string ReturnNoValue()
-        {
-            throw new NotImplementedException();
-        }
-
         public string? HandleFizzBuzzLogic(object? obj)
         {
-            object? value = GetObject(obj, "value");
+            object? value = GetObject(obj, nameof(FizzBuzzModel));
             int result = ConvertToInt(value);
 
             if (IsFizz(result))
@@ -50,6 +46,8 @@ namespace FizzBuzzAPI.Services
 
                 Type type = obj.GetType();
                 PropertyInfo? info = type.GetProperty(part);
+                var infjo = type.GetProperties();
+                var infjwwo = type.GetFields();
                 if (info == null) { return null; }
 
                 obj = info.GetValue(obj);

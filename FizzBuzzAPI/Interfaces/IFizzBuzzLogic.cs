@@ -5,10 +5,9 @@
         bool IsFizz(int value);
         bool IsBuzz(int value);
         bool IsFizzBuzz(int value);
-        string ReturnFizz(int value);
-        string ReturnBuzz(int value);
-        string ReturnFizzBuzz(int value);
-        string ReturnNoValue(int value);
+        string ReturnFizz();
+        string ReturnBuzz();
+        string ReturnFizzBuzz();
         string? HandleFizzBuzzLogic(object value);
     }
 }

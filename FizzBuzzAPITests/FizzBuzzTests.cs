@@ -1,16 +1,20 @@
 using FizzBuzzAPI.Controllers;
 using FizzBuzzAPI.Interfaces;
+using FizzBuzzAPI.Models;
 using FizzBuzzAPI.Services;
 using Moq;
+using Newtonsoft.Json.Linq;
 
 namespace FizzBuzzAPITests
 {
     public class FizzBuzzTests
     {
-        private Mock<IFizzBuzzLogic> _mock;
-        private string _fizz = "";
-        private string _buzz = "";
-        private string _fizzBuzz = "";
+        private Mock<IFizzBuzzLogic> _fizzBuzzLogicInterface;
+        private FizzBuzzModel _fizzBuzzModel;
+        private string _fizz = "Fizz";
+        private string _buzz = "Buzz";
+        private string _fizzBuzz = "FizzBuzz";
+        private string _testStringForControler = "Test string for Controller";
 
         [SetUp]
         public void Setup()
@@ -35,22 +39,26 @@ namespace FizzBuzzAPITests
             // 18:56 ->
             // got distracted by family
 
-            _mock = new Mock<IFizzBuzzLogic>();
+            _fizzBuzzModel = new FizzBuzzModel();
+            _fizzBuzzLogicInterface = new Mock<IFizzBuzzLogic>();
 
-            _mock.Setup(h => h.IsFizz(It.IsAny<int>()))
-                .Callback<bool>(r => r = true);
-            _mock.Setup(h => h.ReturnFizz(It.IsAny<int>()))
-                .Callback<string>(r => _fizz = r);
+            _fizzBuzzLogicInterface.Setup(h => h.HandleFizzBuzzLogic(It.IsAny<int>()))
+                .Returns(() => _testStringForControler);
 
-            _mock.Setup(h => h.IsBuzz(It.IsAny<int>()))
-                .Callback<bool>(r => r = true);
-            _mock.Setup(s => s.ReturnBuzz(It.IsAny<int>()))
-                .Callback<string>(r => _buzz = r);
+            _fizzBuzzLogicInterface.Setup(h => h.IsFizz(It.IsAny<int>()))
+                .Returns<bool>(r => r = true);
+            _fizzBuzzLogicInterface.Setup(h => h.ReturnFizz())
+                .Returns(() => _fizz);
 
-            _mock.Setup(h => h.IsFizzBuzz(It.IsAny<int>()))
-                .Callback<bool>(r => r = true);
-            _mock.Setup(s => s.ReturnFizzBuzz(It.IsAny<int>()))
-                .Callback<string>(r => _fizzBuzz = r);
+            _fizzBuzzLogicInterface.Setup(h => h.IsBuzz(It.IsAny<int>()))
+                .Returns<bool>(r => r = true);
+            _fizzBuzzLogicInterface.Setup(s => s.ReturnBuzz())
+                .Returns(() => _buzz);
+
+            _fizzBuzzLogicInterface.Setup(h => h.IsFizzBuzz(It.IsAny<int>()))
+                .Returns<bool>(r => r = true);
+            _fizzBuzzLogicInterface.Setup(s => s.ReturnFizzBuzz())
+                .Returns(() => _fizzBuzz);
 
             // <- 18:57
 
@@ -70,52 +78,69 @@ namespace FizzBuzzAPITests
 
             // -> 21:19
             // stopped for a bit because of eye
-            // <- 21:36
+            // <- 21:38
 
+            // -> 21:56
+            // runs tests for the first time
+
+            // -> 22:14
+            // I am doing something wrong
+            // -> 22:27
+            // I don't need to mock the class, just the interface 
+
+            // -> 22:49
+            // I ned to create an object because I can't use "System.Int32" as the name of my property
+
+            // -> 23:05 
+            // GetProperty/ies keeps returning null
         }
 
         [Test]
-        public void GivesCorrectValue_ShouldReturn_Fizz()
+        [TestCase("3")]
+        public void GivesCorrectValue_ShouldReturn_Fizz(int value)
         {
-            int value = 3;
-            var service = new Mock<IFizzBuzzLogic>();
-            service.Setup(h => h.IsFizz(It.IsAny<int>()))
-                .Callback<bool>(r => r = true);
-            service.Setup(h => h.ReturnFizz(It.IsAny<int>()))
-                .Callback<string>(r => _fizz = r);
+            // Arrange
+            _fizzBuzzModel.Value = value;
+            var controller = new FizzBuzzController(_fizzBuzzLogicInterface.Object);
 
-            var controller = new FizzBuzzController(service.Object);
-            service.Object.ReturnFizz(value);
+            // Act
+            string? result = controller.ResolveFizzBuzz(_fizzBuzzModel);
 
-            string result = classs.CallTheApiMethodHere(value);
-            Assert.Pass();
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result, Is.EqualTo("Test string for Controller"));
         }
 
         [Test]
-        public void GivesCorrectValue_ShouldReturn_Buzz()
+        [TestCase("5")]
+        public void GivesCorrectValue_ShouldReturn_Buzz(int value)
         {
-            int value = 3;
+            // Arrange
+            _fizzBuzzModel.Value = value;
+            var service = new FizzBuzzLogic();
 
-            string result = classs.CallTheApiMethodHere(value);
-            Assert.Pass();
+            // Act
+            string? result = service.HandleFizzBuzzLogic(value);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result, Is.EqualTo("Buzz"));
         }
 
         [Test]
-        public void GivesCorrectValue_ShouldReturn_FizzBuzzz()
+        [TestCase("15")]
+        public void GivesCorrectValue_ShouldReturn_FizzBuzzz(int value)
         {
-            int value = 3;
+            // Arrange
+            _fizzBuzzModel.Value = value;
+            var controller = new FizzBuzzController(_fizzBuzzLogicInterface.Object);
 
-            string result = classs.CallTheApiMethodHere(value);
-            Assert.Pass();
-        }
+            // Act
+            string? result = controller.ResolveFizzBuzz(_fizzBuzzModel);
 
-        [Test]
-        public void GivesWrongValue_ShouldReturn_Null()
-        {
-            int value = 3;
-
-            string result = classs.CallTheApiMethodHere(value);
-            Assert.Pass();
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result, Is.EqualTo("FizzBuzz"));
         }
 
         [Test]
@@ -124,19 +149,43 @@ namespace FizzBuzzAPITests
         [TestCase("15")]
         public void GivesStringValueTypeNumber_ShouldReturn_ExpectedResult(string value)
         {
-            var result = classs.CallTheApiMethodHere(value);
+            // Arrange
+            var controller = new FizzBuzzController(_fizzBuzzLogicInterface.Object);
+
+            // Act
+            string? result = controller.ResolveFizzBuzz(_fizzBuzzModel);
+
+            // Assert
             Assert.IsNotNull(result);
-            Assert.That(result, Is.AnyOf(["Fizzz", "Buzzz", "FizzBuzz"]));
-            Assert.IsNotNull(result);
+            Assert.That(result, Is.AnyOf(["Fizz", "Buzzz", "FizzBuzz"]));
         }
 
         [Test]
-        public void GivesWrongValueType_ShouldReturn_Null()
+        [TestCase("ABC")]
+        public void GivesWrongValue_ShouldReturn_Null(string value)
         {
-            string value = "abc";
+            // Arrange
+            var controller = new FizzBuzzController(_fizzBuzzLogicInterface.Object);
 
-            string result = classs.CallTheApiMethodHere(value);
-            Assert.Null(result);
+            // Act
+            string? result = controller.ResolveFizzBuzz(_fizzBuzzModel);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        [TestCase(0.001)] // Apparently decimals can't be used in TestCase
+        public void GivesWrongValueType_ShouldReturn_Null(double value)
+        {
+            // Arrange
+            var controller = new FizzBuzzController(_fizzBuzzLogicInterface.Object);
+
+            // Act
+            string? result = controller.ResolveFizzBuzz(_fizzBuzzModel);
+
+            // Assert
+            Assert.IsNull(result);
         }
     }
 }

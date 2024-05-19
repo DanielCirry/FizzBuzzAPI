@@ -1,4 +1,5 @@
 using FizzBuzzAPI.Interfaces;
+using FizzBuzzAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FizzBuzzAPI.Controllers
@@ -15,7 +16,7 @@ namespace FizzBuzzAPI.Controllers
         }
 
         [HttpGet]
-        public string? Get(object value)
+        public string? ResolveFizzBuzz(FizzBuzzModel value)
         { 
             return _fizzBuzzLogic.HandleFizzBuzzLogic(value);
         }
