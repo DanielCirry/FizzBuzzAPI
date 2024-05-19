@@ -22,7 +22,13 @@ namespace FizzBuzzAPI.Services
         public string? HandleFizzBuzzLogic(FizzBuzzModel obj)
         {
             object? value = GetObject(obj, nameof(FizzBuzzModel.Value));
+            if (value == null)
+                return null;
+
             int result = ConvertToInt(value);
+
+            if (result == 0) 
+                return null;
 
             if (IsFizzBuzz(result))
                 return ReturnFizzBuzz();
@@ -36,7 +42,12 @@ namespace FizzBuzzAPI.Services
             return null;
         }
 
-        private int ConvertToInt(object? value) => Convert.ToInt32(value);
+        private int ConvertToInt(object? value)
+        {
+            int.TryParse(value.ToString(), out int result);
+
+            return result;
+        }
 
         private object? GetObject(object? obj, string name)
         {
