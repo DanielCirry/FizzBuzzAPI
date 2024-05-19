@@ -16,9 +16,20 @@ namespace FizzBuzzAPI.Controllers
         }
 
         [HttpGet]
-        public string? ResolveFizzBuzz(FizzBuzzModel value)
-        { 
-            return _fizzBuzzLogic.HandleFizzBuzzLogic(value);
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult ResolveFizzBuzz([FromQuery] FizzBuzzModel model)
+        {
+            if (model == null)
+                return BadRequest();
+
+            var result = _fizzBuzzLogic.HandleFizzBuzzLogic(model);
+
+            if (string.IsNullOrEmpty(result))
+                return NoContent();
+
+            return Ok(result);
         }
     }
 }

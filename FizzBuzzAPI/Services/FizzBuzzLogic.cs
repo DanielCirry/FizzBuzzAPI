@@ -1,5 +1,6 @@
 ﻿using FizzBuzzAPI.Interfaces;
 using FizzBuzzAPI.Models;
+using System.Diagnostics;
 using System.Reflection;
 using System.Xml.Linq;
 
@@ -19,49 +20,59 @@ namespace FizzBuzzAPI.Services
 
         public string ReturnFizzBuzz() => "FizzBuzz";
 
-        public string? HandleFizzBuzzLogic(FizzBuzzModel obj)
+        public string? HandleFizzBuzzLogic(FizzBuzzModel model)
         {
-            object? value = GetObject(obj, nameof(FizzBuzzModel.Value));
-            if (value == null)
-                return null;
+            try
+            {
+                if (model == null || model.Value == null)
+                    return null;
 
-            int result = ConvertToInt(value);
+                object? value = GetObject(model, nameof(FizzBuzzModel.Value));
+                if (value == null)
+                    return null;
 
-            if (result == 0) 
-                return null;
+                int result = ConvertToInt(value);
 
-            if (IsFizzBuzz(result))
-                return ReturnFizzBuzz();
+                if (result == 0)
+                    return null;
 
-            if (IsFizz(result))
-                return ReturnFizz();
+                if (IsFizzBuzz(result))
+                    return ReturnFizzBuzz();
 
-            if (IsBuzz(result))
-                return ReturnBuzz();
+                if (IsFizz(result))
+                    return ReturnFizz();
+
+                if (IsBuzz(result))
+                    return ReturnBuzz();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
 
             return null;
         }
 
-        private int ConvertToInt(object? value)
-        {
-            int.TryParse(value.ToString(), out int result);
-
-            return result;
-        }
-
-        private object? GetObject(object? obj, string name)
+        public object? GetObject(object? obj, string name)
         {
             foreach (string part in name.Split('.'))
             {
                 if (obj == null) { return null; }
 
                 Type type = obj.GetType();
-                PropertyInfo info = type.GetProperty(part);
+                PropertyInfo? info = type.GetProperty(part);
                 if (info == null) { return null; }
 
                 obj = info.GetValue(obj);
             }
             return obj;
+        }
+
+        private int ConvertToInt(object value)
+        {
+            int.TryParse(value.ToString(), out int result);
+
+            return result;
         }
     }
 }
