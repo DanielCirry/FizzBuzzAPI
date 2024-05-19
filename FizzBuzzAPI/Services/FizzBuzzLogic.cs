@@ -19,19 +19,19 @@ namespace FizzBuzzAPI.Services
 
         public string ReturnFizzBuzz() => "FizzBuzz";
 
-        public string? HandleFizzBuzzLogic(object? obj)
+        public string? HandleFizzBuzzLogic(FizzBuzzModel obj)
         {
-            object? value = GetObject(obj, nameof(FizzBuzzModel));
+            object? value = GetObject(obj, nameof(FizzBuzzModel.Value));
             int result = ConvertToInt(value);
+
+            if (IsFizzBuzz(result))
+                return ReturnFizzBuzz();
 
             if (IsFizz(result))
                 return ReturnFizz();
 
             if (IsBuzz(result))
                 return ReturnBuzz();
-
-            if (IsFizzBuzz(result))
-                return ReturnFizzBuzz();
 
             return null;
         }
@@ -45,9 +45,7 @@ namespace FizzBuzzAPI.Services
                 if (obj == null) { return null; }
 
                 Type type = obj.GetType();
-                PropertyInfo? info = type.GetProperty(part);
-                var infjo = type.GetProperties();
-                var infjwwo = type.GetFields();
+                PropertyInfo info = type.GetProperty(part);
                 if (info == null) { return null; }
 
                 obj = info.GetValue(obj);

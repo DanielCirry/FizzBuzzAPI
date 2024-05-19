@@ -1,4 +1,6 @@
-﻿namespace FizzBuzzAPI.Interfaces
+﻿using FizzBuzzAPI.Models;
+
+namespace FizzBuzzAPI.Interfaces
 {
     public interface IFizzBuzzLogic
     {
@@ -8,6 +10,6 @@
         string ReturnFizz();
         string ReturnBuzz();
         string ReturnFizzBuzz();
-        string? HandleFizzBuzzLogic(object value);
+        string? HandleFizzBuzzLogic(FizzBuzzModel value);
     }
 }

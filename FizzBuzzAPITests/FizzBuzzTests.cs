@@ -42,7 +42,7 @@ namespace FizzBuzzAPITests
             _fizzBuzzModel = new FizzBuzzModel();
             _fizzBuzzLogicInterface = new Mock<IFizzBuzzLogic>();
 
-            _fizzBuzzLogicInterface.Setup(h => h.HandleFizzBuzzLogic(It.IsAny<int>()))
+            _fizzBuzzLogicInterface.Setup(h => h.HandleFizzBuzzLogic(It.IsAny<FizzBuzzModel>()))
                 .Returns(() => _testStringForControler);
 
             _fizzBuzzLogicInterface.Setup(h => h.IsFizz(It.IsAny<int>()))
@@ -93,11 +93,14 @@ namespace FizzBuzzAPITests
 
             // -> 23:05 
             // GetProperty/ies keeps returning null
+
+            // -> 23:12
+            // my brain connected that i was still using an object and not my new Model
         }
 
         [Test]
         [TestCase("3")]
-        public void GivesCorrectValue_ShouldReturn_Fizz(int value)
+        public void ResolveFizzBuzz_GivenCorrectValue_ShouldReturnExpectedString(int value)
         {
             // Arrange
             _fizzBuzzModel.Value = value;
@@ -112,63 +115,81 @@ namespace FizzBuzzAPITests
         }
 
         [Test]
-        [TestCase("5")]
-        public void GivesCorrectValue_ShouldReturn_Buzz(int value)
+        [TestCase("3")]
+        public void HandleFizzBuzzLogic_GivenFizzValue_ShouldReturn_Fizz(int value)
         {
             // Arrange
             _fizzBuzzModel.Value = value;
             var service = new FizzBuzzLogic();
 
             // Act
-            string? result = service.HandleFizzBuzzLogic(value);
+            string? result = service.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.That(result, Is.EqualTo("Buzz"));
+            Assert.That(result, Is.EqualTo(_fizz));
+        }
+
+        [Test]
+        [TestCase("5")]
+        public void HandleFizzBuzzLogic_GivenBuzzValue_ShouldReturn_Buzz(int value)
+        {
+            // Arrange
+            _fizzBuzzModel.Value = value;
+            var service = new FizzBuzzLogic();
+
+            // Act
+            string? result = service.HandleFizzBuzzLogic(_fizzBuzzModel);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result, Is.EqualTo(_buzz));
         }
 
         [Test]
         [TestCase("15")]
-        public void GivesCorrectValue_ShouldReturn_FizzBuzzz(int value)
+        public void HandleFizzBuzzLogic_GivenFizzBuzzValue_ShouldReturn_FizzBuzzz(int value)
         {
             // Arrange
             _fizzBuzzModel.Value = value;
-            var controller = new FizzBuzzController(_fizzBuzzLogicInterface.Object);
+            var service = new FizzBuzzLogic();
 
             // Act
-            string? result = controller.ResolveFizzBuzz(_fizzBuzzModel);
+            string? result = service.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.That(result, Is.EqualTo("FizzBuzz"));
+            Assert.That(result, Is.EqualTo(_fizzBuzz));
         }
 
         [Test]
         [TestCase("3")]
         [TestCase("5")]
         [TestCase("15")]
-        public void GivesStringValueTypeNumber_ShouldReturn_ExpectedResult(string value)
+        public void HandleFizzBuzzLogic_GivenStringValueNumber_ShouldReturn_ExpectedResult(string value)
         {
             // Arrange
-            var controller = new FizzBuzzController(_fizzBuzzLogicInterface.Object);
+            _fizzBuzzModel.Value = value;
+            var service = new FizzBuzzLogic();
 
             // Act
-            string? result = controller.ResolveFizzBuzz(_fizzBuzzModel);
+            string? result = service.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.That(result, Is.AnyOf(["Fizz", "Buzzz", "FizzBuzz"]));
+            Assert.That(result, Is.AnyOf([_fizz, _buzz, _fizzBuzz]));
         }
 
         [Test]
         [TestCase("ABC")]
-        public void GivesWrongValue_ShouldReturn_Null(string value)
+        public void HandleFizzBuzzLogic_GivenString_ShouldReturn_Null(string value)
         {
             // Arrange
-            var controller = new FizzBuzzController(_fizzBuzzLogicInterface.Object);
+            _fizzBuzzModel.Value = value;
+            var service = new FizzBuzzLogic();
 
             // Act
-            string? result = controller.ResolveFizzBuzz(_fizzBuzzModel);
+            string? result = service.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
             Assert.IsNull(result);
@@ -176,13 +197,14 @@ namespace FizzBuzzAPITests
 
         [Test]
         [TestCase(0.001)] // Apparently decimals can't be used in TestCase
-        public void GivesWrongValueType_ShouldReturn_Null(double value)
+        public void HandleFizzBuzzLogic_GivenWrongValueType_ShouldReturn_Null(double value)
         {
             // Arrange
-            var controller = new FizzBuzzController(_fizzBuzzLogicInterface.Object);
+            _fizzBuzzModel.Value = value;
+            var service = new FizzBuzzLogic();
 
             // Act
-            string? result = controller.ResolveFizzBuzz(_fizzBuzzModel);
+            string? result = service.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
             Assert.IsNull(result);
