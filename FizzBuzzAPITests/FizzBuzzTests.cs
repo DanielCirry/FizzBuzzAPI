@@ -67,7 +67,7 @@ namespace FizzBuzzAPITests
             var result = actionResult as NoContentResult;
 
             // Assert
-            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status204NoContent));
+            Assert.That(result?.StatusCode, Is.EqualTo(StatusCodes.Status204NoContent));
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace FizzBuzzAPITests
             var result = actionResult as BadRequestResult;
 
             // Assert
-            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status400BadRequest));
+            Assert.That(result?.StatusCode, Is.EqualTo(StatusCodes.Status400BadRequest));
         }
 
         [Test]

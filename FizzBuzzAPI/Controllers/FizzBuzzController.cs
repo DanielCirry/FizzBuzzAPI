@@ -15,11 +15,11 @@ namespace FizzBuzzAPI.Controllers
             _fizzBuzzLogic = fizzBuzzLogic;
         }
 
-        [HttpGet]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult ResolveFizzBuzz([FromQuery] FizzBuzzModel model)
+        public IActionResult ResolveFizzBuzz(FizzBuzzModel model)
         {
             if (model == null)
                 return BadRequest();
