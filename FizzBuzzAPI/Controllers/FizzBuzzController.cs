@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FizzBuzzAPI.Controllers
 {
     [ApiController]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Route("[controller]")]
     public class FizzBuzzController : ControllerBase
     {
@@ -18,7 +19,6 @@ namespace FizzBuzzAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult ResolveFizzBuzz(FizzBuzzModel model)
         {
             if (model == null)
@@ -26,7 +26,7 @@ namespace FizzBuzzAPI.Controllers
 
             var result = _fizzBuzzLogic.HandleFizzBuzzLogic(model);
 
-            if (string.IsNullOrEmpty(result))
+            if (result?.Count == 0)
                 return NoContent();
 
             return Ok(result);

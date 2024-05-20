@@ -1,8 +1,9 @@
-﻿using FizzBuzzAPI.Interfaces;
+﻿using FizzBuzzAPI.Helpers;
+using FizzBuzzAPI.Interfaces;
 using FizzBuzzAPI.Models;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Reflection;
-using System.Xml.Linq;
 
 namespace FizzBuzzAPI.Services
 {
@@ -20,30 +21,30 @@ namespace FizzBuzzAPI.Services
 
         public string ReturnFizzBuzz() => "FizzBuzz";
 
-        public string? HandleFizzBuzzLogic(FizzBuzzModel model)
+        public List<string>? HandleFizzBuzzLogic(FizzBuzzModel model)
         {
             try
             {
                 if (model == null || model.Value == null)
                     return null;
 
-                object? value = GetObject(model, nameof(FizzBuzzModel.Value));
+                object? value = ObjectHelper.GetObject(model, nameof(FizzBuzzModel.Value));
                 if (value == null)
                     return null;
 
-                int result = ConvertToInt(value);
+                List<string> listResult = new List<string>();
 
-                if (result == 0)
-                    return null;
+                if (!ObjectHelper.TryParseJson(value, out List<string> listOfValues))
+                    listResult.Add(HandleFizzBuzz(value));
 
-                if (IsFizzBuzz(result))
-                    return ReturnFizzBuzz();
 
-                if (IsFizz(result))
-                    return ReturnFizz();
+                if (listOfValues != null)
+                    foreach (var item in listOfValues)
+                    {
+                        listResult.Add(HandleFizzBuzz(item));
+                    }
 
-                if (IsBuzz(result))
-                    return ReturnBuzz();
+                return listResult;
             }
             catch (Exception ex)
             {
@@ -53,19 +54,23 @@ namespace FizzBuzzAPI.Services
             return null;
         }
 
-        public object? GetObject(object? obj, string name)
+        private string? HandleFizzBuzz(object? value)
         {
-            foreach (string part in name.Split('.'))
-            {
-                if (obj == null) { return null; }
+            int result = ConvertToInt(value);
 
-                Type type = obj.GetType();
-                PropertyInfo? info = type.GetProperty(part);
-                if (info == null) { return null; }
+            if (result == 0)
+                return value.ToString();
 
-                obj = info.GetValue(obj);
-            }
-            return obj;
+            if (IsFizzBuzz(result))
+                return ReturnFizzBuzz();
+
+            if (IsFizz(result))
+                return ReturnFizz();
+
+            if (IsBuzz(result))
+                return ReturnBuzz();
+
+            return value.ToString();
         }
 
         private int ConvertToInt(object value)

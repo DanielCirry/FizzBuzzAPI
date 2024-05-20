@@ -1,11 +1,5 @@
-using FizzBuzzAPI.Controllers;
-using FizzBuzzAPI.Interfaces;
 using FizzBuzzAPI.Models;
 using FizzBuzzAPI.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
 
 namespace FizzBuzzAPITests
 {
@@ -13,16 +7,17 @@ namespace FizzBuzzAPITests
     {
         private FizzBuzzLogic _fizzBuzzLogic;
         private FizzBuzzModel _fizzBuzzModel;
-        private string _fizz = "Fizz";
-        private string _buzz = "Buzz";
-        private string _fizzBuzz = "FizzBuzz";
-        private string _testStringForControler = "Test string for Controller";
+        List<string> _listResult;
+        private readonly string _fizz = "Fizz";
+        private readonly string _buzz = "Buzz";
+        private readonly string _fizzBuzz = "FizzBuzz";
 
         [SetUp]
         public void Setup()
         {
             _fizzBuzzLogic = new FizzBuzzLogic();
             _fizzBuzzModel = new FizzBuzzModel();
+            _listResult = new List<string>();
         }
 
         [Test]
@@ -36,13 +31,14 @@ namespace FizzBuzzAPITests
         {
             // Arrange
             _fizzBuzzModel.Value = value;
+            _listResult.Add(_fizz);
 
             // Act
-            string? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
+            List<string>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.That(result, Is.EqualTo(_fizz));
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.EqualTo(_listResult));
         }
 
         [Test]
@@ -56,13 +52,14 @@ namespace FizzBuzzAPITests
         {
             // Arrange
             _fizzBuzzModel.Value = value;
+            _listResult.Add(_buzz);
 
             // Act
-            string? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
+            List<string>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.That(result, Is.EqualTo(_buzz));
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.EqualTo(_listResult));
         }
 
         [Test]
@@ -76,47 +73,52 @@ namespace FizzBuzzAPITests
         {
             // Arrange
             _fizzBuzzModel.Value = value;
+            _listResult.Add(_fizzBuzz);
 
             // Act
-            string? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
+            List<string>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.That(result, Is.EqualTo(_fizzBuzz));
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.EqualTo(_listResult));
         }
 
         [Test]
-        [TestCase("50")]
-        [TestCase(50)]
-        [TestCase("63")]
-        [TestCase(63)]
-        [TestCase("150")]
-        [TestCase(150)]
+        [TestCase("[\"50\",50,\"63\",63,\"150\",150, \"ABC\"]")]
         public void HandleFizzBuzzLogic_GivenStringValueNumber_ShouldReturn_ExpectedResult(object value)
         {
             // Arrange
             _fizzBuzzModel.Value = value;
+            _listResult.Add(_buzz);
+            _listResult.Add(_buzz);
+            _listResult.Add(_fizz);
+            _listResult.Add(_fizz);
+            _listResult.Add(_fizzBuzz);
+            _listResult.Add(_fizzBuzz);
+            _listResult.Add("ABC");
 
             // Act
-            string? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
+            List<string>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.That(result, Is.AnyOf([_fizz, _buzz, _fizzBuzz]));
+            Assert.That(result, Is.EqualTo(_listResult));
         }
 
         [Test]
         [TestCase("ABC")]
-        public void HandleFizzBuzzLogic_GivenString_ShouldReturn_Null(object value)
+        public void HandleFizzBuzzLogic_GivenString_ShouldReturn_OriginalValue(object value)
         {
             // Arrange
             _fizzBuzzModel.Value = value;
+            _listResult.Add("ABC");
 
             // Act
-            string? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
+            List<string>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
-            Assert.IsNull(result);
+            Assert.IsNotNull(result);
+            Assert.That(result, Is.EqualTo(_listResult));
         }
 
         [Test]
@@ -126,12 +128,14 @@ namespace FizzBuzzAPITests
         {
             // Arrange
             _fizzBuzzModel.Value = value;
+            _listResult.Add("0.001");
 
             // Act
-            string? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
+            List<string>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
-            Assert.That(result, Is.Null);
+            Assert.IsNotNull(result);
+            Assert.That(result, Is.EqualTo(_listResult));
         }
     }
 }

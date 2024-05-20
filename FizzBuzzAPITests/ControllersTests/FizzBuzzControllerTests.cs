@@ -1,9 +1,7 @@
 using FizzBuzzAPI.Controllers;
 using FizzBuzzAPI.Interfaces;
 using FizzBuzzAPI.Models;
-using FizzBuzzAPI.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -13,6 +11,7 @@ namespace FizzBuzzAPITests
     {
         private Mock<IFizzBuzzLogic> _fizzBuzzLogicInterface;
         private FizzBuzzModel _fizzBuzzModel;
+        List<string> _listResult;
         private readonly string _testStringForControler = "Test string for Controller";
 
         [SetUp]
@@ -20,7 +19,7 @@ namespace FizzBuzzAPITests
         {
             _fizzBuzzLogicInterface = new Mock<IFizzBuzzLogic>();
             _fizzBuzzModel = new FizzBuzzModel();
-
+            _listResult = new List<string>();
         }
 
         [Test]
@@ -28,8 +27,9 @@ namespace FizzBuzzAPITests
         public void ResolveFizzBuzz_GivenCorrectValue_ShouldReturnsOkResult(string value)
         {
             // Arrange
+            _listResult.Add(_testStringForControler);
             _fizzBuzzLogicInterface.Setup(h => h.HandleFizzBuzzLogic(It.Is<FizzBuzzModel>(x => x.Value != null)))
-                .Returns(() => _testStringForControler);
+                .Returns(() => _listResult);
 
             _fizzBuzzModel.Value = value;
             var controller = new FizzBuzzController(_fizzBuzzLogicInterface.Object);
@@ -40,11 +40,11 @@ namespace FizzBuzzAPITests
             Assert.That(okObjectResult, Is.Not.Null);
             Assert.That(okObjectResult.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
 
-            string? result = okObjectResult.Value as string;
+            List<string> result = okObjectResult.Value as List<string>;
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.That(result, Is.EqualTo(_testStringForControler));
+            Assert.That(result, Is.EqualTo(_listResult));
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace FizzBuzzAPITests
         {
             // Arrange
             _fizzBuzzLogicInterface.Setup(h => h.HandleFizzBuzzLogic(It.IsAny<FizzBuzzModel>()))
-                .Returns(() => string.Empty);
+                .Returns(() => _listResult);
 
             _fizzBuzzModel.Value = value;
             var controller = new FizzBuzzController(_fizzBuzzLogicInterface.Object);
@@ -64,6 +64,7 @@ namespace FizzBuzzAPITests
             var result = actionResult as NoContentResult;
 
             // Assert
+            Assert.That(result, Is.Not.Null);
             Assert.That(result?.StatusCode, Is.EqualTo(StatusCodes.Status204NoContent));
         }
 
@@ -80,6 +81,7 @@ namespace FizzBuzzAPITests
             var result = actionResult as BadRequestResult;
 
             // Assert
+            Assert.That(result, Is.Not.Null);
             Assert.That(result?.StatusCode, Is.EqualTo(StatusCodes.Status400BadRequest));
         }
     }
