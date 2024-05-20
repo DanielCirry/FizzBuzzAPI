@@ -11,7 +11,7 @@ namespace FizzBuzzAPITests
     {
         private Mock<IFizzBuzzLogic> _fizzBuzzLogicInterface;
         private FizzBuzzModel _fizzBuzzModel;
-        List<string> _listResult;
+        List<string?> _listResult;
         private readonly string _testStringForControler = "Test string for Controller";
 
         [SetUp]
@@ -40,7 +40,7 @@ namespace FizzBuzzAPITests
             Assert.That(okObjectResult, Is.Not.Null);
             Assert.That(okObjectResult.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
 
-            List<string> result = okObjectResult.Value as List<string>;
+            List<string?> result = okObjectResult.Value as List<string?>;
 
             // Assert
             Assert.IsNotNull(result);

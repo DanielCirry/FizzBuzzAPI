@@ -7,7 +7,7 @@ namespace FizzBuzzAPITests
     {
         private FizzBuzzLogic _fizzBuzzLogic;
         private FizzBuzzModel _fizzBuzzModel;
-        List<string> _listResult;
+        List<string?> _listResult;
         private readonly string _fizz = "Fizz";
         private readonly string _buzz = "Buzz";
         private readonly string _fizzBuzz = "FizzBuzz";
@@ -17,7 +17,7 @@ namespace FizzBuzzAPITests
         {
             _fizzBuzzLogic = new FizzBuzzLogic();
             _fizzBuzzModel = new FizzBuzzModel();
-            _listResult = new List<string>();
+            _listResult = new List<string?>();
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace FizzBuzzAPITests
             _listResult.Add(_fizz);
 
             // Act
-            List<string>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
+            List<string?>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -55,7 +55,7 @@ namespace FizzBuzzAPITests
             _listResult.Add(_buzz);
 
             // Act
-            List<string>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
+            List<string?>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -76,7 +76,7 @@ namespace FizzBuzzAPITests
             _listResult.Add(_fizzBuzz);
 
             // Act
-            List<string>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
+            List<string?>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -98,7 +98,7 @@ namespace FizzBuzzAPITests
             _listResult.Add("ABC");
 
             // Act
-            List<string>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
+            List<string?>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
             Assert.IsNotNull(result);
@@ -114,7 +114,7 @@ namespace FizzBuzzAPITests
             _listResult.Add("ABC");
 
             // Act
-            List<string>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
+            List<string?>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
             Assert.IsNotNull(result);
@@ -131,7 +131,7 @@ namespace FizzBuzzAPITests
             _listResult.Add("0.001");
 
             // Act
-            List<string>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
+            List<string?>? result = _fizzBuzzLogic.HandleFizzBuzzLogic(_fizzBuzzModel);
 
             // Assert
             Assert.IsNotNull(result);

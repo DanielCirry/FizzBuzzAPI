@@ -21,7 +21,7 @@ namespace FizzBuzzAPI.Services
 
         public string ReturnFizzBuzz() => "FizzBuzz";
 
-        public List<string>? HandleFizzBuzzLogic(FizzBuzzModel model)
+        public List<string?>? HandleFizzBuzzLogic(FizzBuzzModel model)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace FizzBuzzAPI.Services
                 if (value == null)
                     return null;
 
-                List<string> listResult = new List<string>();
+                List<string?> listResult = new List<string?>();
 
                 if (!ObjectHelper.TryParseJson(value, out List<string> listOfValues))
                     listResult.Add(HandleFizzBuzz(value));
@@ -59,7 +59,7 @@ namespace FizzBuzzAPI.Services
             int result = ConvertToInt(value);
 
             if (result == 0)
-                return value.ToString();
+                return value?.ToString();
 
             if (IsFizzBuzz(result))
                 return ReturnFizzBuzz();
@@ -70,12 +70,12 @@ namespace FizzBuzzAPI.Services
             if (IsBuzz(result))
                 return ReturnBuzz();
 
-            return value.ToString();
+            return value?.ToString();
         }
 
-        private int ConvertToInt(object value)
+        private int ConvertToInt(object? value)
         {
-            int.TryParse(value.ToString(), out int result);
+            int.TryParse(value?.ToString(), out int result);
 
             return result;
         }

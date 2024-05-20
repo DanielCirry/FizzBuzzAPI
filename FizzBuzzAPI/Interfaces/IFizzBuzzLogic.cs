@@ -10,6 +10,6 @@ namespace FizzBuzzAPI.Interfaces
         string ReturnFizz();
         string ReturnBuzz();
         string ReturnFizzBuzz();
-        List<string>? HandleFizzBuzzLogic(FizzBuzzModel model);
+        List<string?>? HandleFizzBuzzLogic(FizzBuzzModel model);
     }
 }

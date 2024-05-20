@@ -14,7 +14,7 @@ namespace FizzBuzzAPI.Helpers
                 MissingMemberHandling = MissingMemberHandling.Error
             };
 
-            result = JsonConvert.DeserializeObject<T>(value.ToString(), settings);
+            result = JsonConvert.DeserializeObject<T>(value?.ToString(), settings);
 
             return success;
         }
